@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Age Calculator</title>
+  <title>Age Calculator (Years, Months, Days)</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -28,7 +28,8 @@
     #result {
       margin-top: 20px;
       font-weight: bold;
-      font-size: 20px;
+      font-size: 18px;
+      color: #333;
     }
   </style>
 </head>
@@ -43,19 +44,34 @@
 
   <script>
     function calculateAge() {
-      const dob = document.getElementById('dob').value;
-      if (!dob) {
-        alert('Please select your birth date');
+      const dobValue = document.getElementById("dob").value;
+      if (!dobValue) {
+        alert("Please select your birth date.");
         return;
       }
-      const birthDate = new Date(dob);
+
+      const dob = new Date(dobValue);
       const today = new Date();
-      let age = today.getFullYear() - birthDate.getFullYear();
-      const m = today.getMonth() - birthDate.getMonth();
-      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
+
+      let years = today.getFullYear() - dob.getFullYear();
+      let months = today.getMonth() - dob.getMonth();
+      let days = today.getDate() - dob.getDate();
+
+      // अगर दिन negative है तो पिछले महीने से दिन उधार लें
+      if (days < 0) {
+        months--;
+        const previousMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+        days += previousMonth.getDate();
       }
-      document.getElementById('result').innerText = Your age is: ${age} years;
+
+      // अगर महीने negative है तो साल से 1 घटाएं
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      document.getElementById("result").innerText =
+        `आपकी उम्र है: ${years} वर्ष, ${months} महीना, और ${days} दिन।`;
     }
   </script>
 </body>
